@@ -1,3 +1,3 @@
 export default function Home() {
-  return <h1>Obrigado por aceitar compartilhar a vida comigo!</h1>;
+  return <h1>Sou muito feliz por ter você do meu lado! 😘</h1>;
 }
