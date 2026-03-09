@@ -1,21 +1,7 @@
 import { Client } from "pg";
 
 async function query(queryParams) {
-  const client = new Client({
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    database: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    ssl: process.env.NODE_ENV !== "development" ? true : false,
-  });
-  console.log("CREDENTIALS", {
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    database: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-  });
+  const client = new Client(buildClientConfig());
 
   try {
     await client.connect();
@@ -27,6 +13,27 @@ async function query(queryParams) {
   } finally {
     await client.end();
   }
+}
+
+function buildClientConfig() {
+  const result = {
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
+    database: process.env.POSTGRES_DB,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    ssl: false,
+  };
+  if (process.env.NODE_ENV === "development") return result;
+
+  const SSLCACertificate = process.env.POSTGRES_CA;
+  if (SSLCACertificate) {
+    result.ssl = { ca: SSLCACertificate, rejectUnauthorized: true };
+  } else {
+    result.ssl = true;
+  }
+
+  return result;
 }
 
 export default {
