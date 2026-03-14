@@ -6,7 +6,7 @@ export default async function migrations(request, response) {
   const defaultMigrationOptions = {
     dbClient,
     dryRun: true,
-    dir: join("infra", "migrations"),
+    dir: join(__dirname, "infra", "migrations"),
     direction: "up",
     verbose: true,
     migrationsTable: "pgmigrations",
