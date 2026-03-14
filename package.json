@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Implementação de estudos do tabnews.com.br",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "npm run services:up && next dev",
     "services:up": "sudo docker compose -f infra/compose.yaml up -d",
@@ -10,8 +11,8 @@
     "services:down": "sudo docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "test": "jest",
-    "test:watch": "jest --watchAll",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watchAll --runInBand",
     "migration:create": "node-pg-migrate -m infra/migrations create",
     "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up"
   },
@@ -19,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^17.3.1",
+    "dotenv-expand": "^11.0.6",
     "next": "^13.1.6",
     "node-pg-migrate": "^8.0.4",
     "pg": "^8.11.3",

@@ -1,18 +1,26 @@
 import { Client } from "pg";
 
 async function query(queryParams) {
-  const client = new Client(buildClientConfig());
+  let client;
 
   try {
-    await client.connect();
+    client = await getNewClient();
     const result = await client.query(queryParams);
+
     return result;
   } catch (error) {
     console.error(error);
+
     throw error;
   } finally {
     await client.end();
   }
+}
+
+async function getNewClient() {
+  const client = new Client(buildClientConfig());
+  await client.connect();
+  return client;
 }
 
 function buildClientConfig() {
@@ -24,7 +32,7 @@ function buildClientConfig() {
     password: process.env.POSTGRES_PASSWORD,
     ssl: false,
   };
-  if (process.env.NODE_ENV === "development") return result;
+  if (process.env.NODE_ENV !== "production") return result;
 
   const SSLCACertificate = process.env.POSTGRES_CA;
   if (SSLCACertificate) {
@@ -37,5 +45,6 @@ function buildClientConfig() {
 }
 
 export default {
-  query: query,
+  query,
+  getNewClient,
 };
