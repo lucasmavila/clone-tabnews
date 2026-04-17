@@ -1,11 +1,9 @@
 import database from "infra/database";
 import { readdir } from "fs/promises";
 
-beforeAll(cleanDatabase);
-
-async function cleanDatabase() {
+beforeAll(async () => {
   await database.query("drop schema public cascade; create schema public");
-}
+});
 
 async function countMigrations() {
   const filesAndDirs = await readdir("infra/migrations");
