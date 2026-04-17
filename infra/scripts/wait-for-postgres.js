@@ -1,5 +1,5 @@
 import { exec } from "node:child_process";
-function checkPosgres() {
+export function checkPosgres() {
   exec("docker exec postgres-dev pg_isready --host localhost", handleReturn);
   function handleReturn(error, stdout) {
     if (stdout.search("accepting connections") === -1) {
@@ -13,4 +13,3 @@ function checkPosgres() {
 }
 
 process.stdout.write("\n🔵 Waiting Postgres accepting connections");
-checkPosgres();
